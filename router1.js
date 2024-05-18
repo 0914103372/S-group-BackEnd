@@ -3,10 +3,11 @@ const express = require('express')
 var router = express.Router()
 const fs = require('fs')
 const data =  JSON.parse( fs.readFileSync("data.json")) 
-router.get('/',(req,res)=>{
+maxid = data[data.length-1].id
+router.get('/user',(req,res)=>{
     res.send(data)
 })
-router.get('/:id',(req,res)=>{
+router.get('/user/:id',(req,res)=>{
     var id = req.params.id
     data.forEach(element => {
         if(element.id == id)
@@ -25,18 +26,20 @@ function validfomat(req,res,next)
         if(!keys.includes(e))
         {
             res.send("data sai cut")
+            return
         }
     })
     next()
 }
 
-router.post("/",validfomat,(req,res)=>{
+router.post("/user",validfomat,(req,res)=>{
     res.send(req.body)
-    req.body.id = data[data.length-1].id+1
-    data.push(req.body)
+    var newob = req.body
+    newob.id = maxid+++1
+    data.push(newob)
     fs.writeFileSync('data.json',JSON.stringify(data))
 })
-router.put('/:id',(req,res)=>{
+router.put('/user/:id',(req,res)=>{
     var newob = req.body
     var id = req.params.id
     req.body.id = id
@@ -49,7 +52,7 @@ router.put('/:id',(req,res)=>{
     fs.writeFileSync('data.json',JSON.stringify(data))
     res.send('success')
 })
-router.delete('/:id',(req,res)=>{
+router.delete('/user/:id',(req,res)=>{
     var id = req.params.id
     data.forEach((e,x)=>{
         if(e.id==id)

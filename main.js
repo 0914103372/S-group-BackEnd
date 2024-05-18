@@ -9,7 +9,7 @@ app.get("/",(req,res)=>{
     res.send("adu")
  })
 
-app.use('/api/user',router1)
+app.use('/api',router1)
 app.listen(port,()=>{
     console.log(`example app listening at http://localhost:${port}`)
  })
