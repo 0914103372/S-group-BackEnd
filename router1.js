@@ -3,7 +3,6 @@ const express = require('express')
 var router = express.Router()
 const fs = require('fs')
 const data =  JSON.parse( fs.readFileSync("data.json")) 
-maxid = data[data.length-1].id
 router.get('/user',(req,res)=>{
     res.send(data)
 })
@@ -34,12 +33,13 @@ function validfomat(req,res,next)
 
 router.post("/user",validfomat,(req,res)=>{
     res.send(req.body)
+    maxid = data[data.length-1].id
     var newob = req.body
     newob.id = maxid+++1
     data.push(newob)
     fs.writeFileSync('data.json',JSON.stringify(data))
 })
-router.put('/user/:id',(req,res)=>{
+router.put('/user/:id',validfomat,(req,res)=>{
     var newob = req.body
     var id = req.params.id
     req.body.id = id
